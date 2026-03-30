@@ -3,8 +3,10 @@
 import { useRef, useState } from "react";
 import { useParams } from "next/navigation";
 
+type Status = "draft" | "sent" | "received" | "validated";
+
 export default function DemandePage() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<Status>("draft");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -18,28 +20,24 @@ export default function DemandePage() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSent(true);
+    setStatus("sent");
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-
     if (files.length === 0) return;
 
     setSelectedFiles((prev) => {
       const merged = [...prev];
 
       for (const file of files) {
-        const alreadyExists = merged.some(
-          (existing) =>
-            existing.name === file.name &&
-            existing.size === file.size &&
-            existing.lastModified === file.lastModified
+        const exists = merged.some(
+          (f) =>
+            f.name === file.name &&
+            f.size === file.size &&
+            f.lastModified === file.lastModified
         );
-
-        if (!alreadyExists) {
-          merged.push(file);
-        }
+        if (!exists) merged.push(file);
       }
 
       return merged;
@@ -50,10 +48,8 @@ export default function DemandePage() {
     }
   }
 
-  function removeFile(indexToRemove: number) {
-    setSelectedFiles((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
-    );
+  function removeFile(index: number) {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   }
 
   return (
@@ -69,105 +65,99 @@ export default function DemandePage() {
           Référence : <span className="font-semibold">{id}</span>
         </p>
 
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold">Envoyer votre dossier</h2>
+        {/* STATUS */}
+        <div className="mt-4 flex gap-2 text-sm">
+          <span className={`px-3 py-1 rounded-full ${status === "sent" || status === "received" || status === "validated" ? "bg-blue-100 text-blue-800" : "bg-gray-100"}`}>
+            Envoyé
+          </span>
+          <span className={`px-3 py-1 rounded-full ${status === "received" || status === "validated" ? "bg-green-100 text-green-800" : "bg-gray-100"}`}>
+            Reçu
+          </span>
+          <span className={`px-3 py-1 rounded-full ${status === "validated" ? "bg-purple-100 text-purple-800" : "bg-gray-100"}`}>
+            Validé
+          </span>
+        </div>
 
-          <p className="mt-2 text-sm text-slate-600">
-            Complétez ce formulaire pour répondre à la demande.
-          </p>
+        <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold">Envoyer votre dossier</h2>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <input
               type="text"
               placeholder="Nom"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3"
+              className="w-full rounded-xl border px-4 py-3"
               required
             />
 
             <input
               type="email"
               placeholder="Email"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3"
+              className="w-full rounded-xl border px-4 py-3"
               required
             />
 
-            <div className="rounded-2xl border border-dashed border-slate-300 p-4">
-              <label className="mb-2 block text-sm font-medium text-slate-700">
-                Ajouter des fichiers
-              </label>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                onChange={handleFileChange}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3"
-              />
-
-              <p className="mt-2 text-xs text-slate-500">
-                Vous pouvez ajouter des fichiers plusieurs fois. Les fichiers déjà
-                sélectionnés restent dans la liste.
-              </p>
-            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              className="w-full rounded-xl border px-4 py-3"
+            />
 
             {selectedFiles.length > 0 && (
-              <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="font-semibold text-blue-900">
-                    Fichiers sélectionnés
-                  </h3>
-                  <span className="text-sm text-blue-700">
-                    {selectedFiles.length} fichier(s)
-                  </span>
-                </div>
-
-                <div className="space-y-2">
-                  {selectedFiles.map((file, index) => (
-                    <div
-                      key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
-                      className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm shadow-sm"
-                    >
-                      <div className="min-w-0">
-                        <p className="truncate font-medium text-slate-800">
-                          {file.name}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          {(file.size / 1024).toFixed(1)} KB
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => removeFile(index)}
-                        className="ml-3 rounded-lg border border-red-200 px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-50"
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  ))}
-                </div>
+              <div className="bg-blue-50 p-3 rounded-xl">
+                {selectedFiles.map((file, i) => (
+                  <div key={i} className="flex justify-between text-sm">
+                    {file.name}
+                    <button type="button" onClick={() => removeFile(i)}>
+                      ❌
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
 
-            <button
-              type="submit"
-              className="rounded-xl bg-blue-700 px-6 py-3 font-semibold text-white"
-            >
+            <button className="bg-blue-700 text-white px-6 py-3 rounded-xl">
               Envoyer
             </button>
           </form>
         </div>
 
-        {sent && (
-          <div className="mt-6 rounded-2xl border border-green-200 bg-green-50 p-5 text-green-800">
-            <h2 className="font-semibold">Dossier envoyé</h2>
-            <p className="mt-2 text-sm">
-              Votre réponse a bien été transmise.
-            </p>
-            <p className="mt-1 text-sm">
-              Nombre de fichiers joints :{" "}
-              <span className="font-semibold">{selectedFiles.length}</span>
-            </p>
+        {/* ACTIONS STATUS */}
+        {status === "sent" && (
+          <button
+            onClick={() => setStatus("received")}
+            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-xl"
+          >
+            Marquer comme reçu
+          </button>
+        )}
+
+        {status === "received" && (
+          <button
+            onClick={() => setStatus("validated")}
+            className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-xl"
+          >
+            Valider le dossier
+          </button>
+        )}
+
+        {/* MESSAGE */}
+        {status === "sent" && (
+          <div className="mt-6 bg-blue-50 p-4 rounded-xl text-blue-800">
+            Dossier envoyé
+          </div>
+        )}
+
+        {status === "received" && (
+          <div className="mt-6 bg-green-50 p-4 rounded-xl text-green-800">
+            Dossier reçu par le service
+          </div>
+        )}
+
+        {status === "validated" && (
+          <div className="mt-6 bg-purple-50 p-4 rounded-xl text-purple-800">
+            Dossier validé
           </div>
         )}
       </div>
