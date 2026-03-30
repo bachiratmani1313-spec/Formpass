@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function ServicePage() {
   const [created, setCreated] = useState(false);
   const [requestId, setRequestId] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -12,6 +14,40 @@ export default function ServicePage() {
     const id = "FPS-" + Math.floor(Math.random() * 1000000);
     setRequestId(id);
     setCreated(true);
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setSelectedFiles((prev) => {
+      const merged = [...prev];
+
+      for (const file of files) {
+        const exists = merged.some(
+          (existing) =>
+            existing.name === file.name &&
+            existing.size === file.size &&
+            existing.lastModified === file.lastModified
+        );
+
+        if (!exists) {
+          merged.push(file);
+        }
+      }
+
+      return merged;
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  function removeFile(indexToRemove: number) {
+    setSelectedFiles((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
   }
 
   return (
@@ -110,6 +146,64 @@ export default function ServicePage() {
             />
           </div>
 
+          <div className="rounded-2xl border border-dashed border-slate-300 p-4">
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Documents joints à la demande (optionnel)
+            </label>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3"
+            />
+
+            <p className="mt-2 text-xs text-slate-500">
+              Ajoutez un ou plusieurs documents modèle, formulaires, notices ou
+              pièces de référence.
+            </p>
+          </div>
+
+          {selectedFiles.length > 0 && (
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="font-semibold text-blue-900">
+                  Documents ajoutés
+                </h3>
+                <span className="text-sm text-blue-700">
+                  {selectedFiles.length} fichier(s)
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {selectedFiles.map((file, index) => (
+                  <div
+                    key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
+                    className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm shadow-sm"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-slate-800">
+                        {file.name}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {(file.size / 1024).toFixed(1)} KB
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => removeFile(index)}
+                      className="ml-3 rounded-lg border border-red-200 px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-50"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-4">
             <button
               type="submit"
@@ -132,11 +226,16 @@ export default function ServicePage() {
             <h2 className="text-lg font-semibold">Demande créée</h2>
 
             <p className="mt-2 text-sm">
-              Votre demande a bien été simulée avec succès.
+              Votre demande a bien été créée avec succès.
             </p>
 
             <p className="mt-2 text-sm">
               Référence : <span className="font-semibold">{requestId}</span>
+            </p>
+
+            <p className="mt-1 text-sm">
+              Documents joints :{" "}
+              <span className="font-semibold">{selectedFiles.length}</span>
             </p>
 
             <div className="mt-4 rounded-xl border border-slate-200 bg-white p-3">
