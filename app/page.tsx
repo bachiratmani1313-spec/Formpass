@@ -2,122 +2,42 @@
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_30%)]" />
+    <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+      <div className="w-full max-w-3xl px-6 text-center">
+        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
+          FormPass
+        </p>
 
-        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10">
-          <header className="mb-16 flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
-                FormPass
-              </p>
-              <p className="mt-2 text-sm text-slate-400">
-                Transmission simple de dossiers
-              </p>
-            </div>
+        <h1 className="mt-6 text-5xl font-bold">
+          Envoyez, recevez et suivez un dossier
+        </h1>
 
-            <div className="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 md:block">
-              Version démo
-            </div>
-          </header>
+        <p className="mt-4 text-lg text-slate-300">
+          Version simple de test des boutons
+        </p>
 
-          <div className="grid flex-1 items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="relative z-50">
-              <div className="mb-6 inline-flex rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
-                Citoyens · Communes · Entreprises
-              </div>
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = "/citoyen";
+            }}
+            className="w-full rounded-2xl bg-blue-600 px-6 py-4 font-semibold text-white sm:w-auto"
+          >
+            Espace citoyen
+          </button>
 
-              <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-6xl">
-                Envoyez, recevez et suivez un dossier en quelques clics
-              </h1>
-
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                FormPass permet de créer une demande, générer un lien sécurisé,
-                transmettre plusieurs documents et suivre le statut du dossier
-                de manière simple, claire et professionnelle.
-              </p>
-
-              <div className="relative z-50 mt-8 flex flex-wrap gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    window.location.href = "/citoyen";
-                  }}
-                  className="rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
-                >
-                  Espace citoyen
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    window.location.href = "/service";
-                  }}
-                  className="rounded-2xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
-                >
-                  Espace service
-                </button>
-              </div>
-
-              <div className="mt-12 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <p className="text-2xl font-bold text-white">1 lien</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Une seule demande à partager
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <p className="text-2xl font-bold text-white">Multi-fichiers</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Ajout progressif de documents
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <p className="text-2xl font-bold text-white">3 statuts</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Envoyé, reçu, validé
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pointer-events-none rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md">
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
-                  Aperçu
-                </p>
-
-                <h2 className="mt-2 text-2xl font-bold text-white">
-                  Parcours FormPass
-                </h2>
-
-                <div className="mt-8 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      1. Création de demande
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      2. Réponse au lien
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      3. Suivi du statut
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = "/service";
+            }}
+            className="w-full rounded-2xl border border-white/20 px-6 py-4 font-semibold text-white sm:w-auto"
+          >
+            Espace service
+          </button>
         </div>
-      </section>
+      </div>
     </main>
   );
 }
