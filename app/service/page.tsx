@@ -25,7 +25,8 @@ export default function ServicePage() {
           Espace service / entreprise
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-slate-600">
-          Créez une demande claire et recevez des dossiers complets, structurés et traçables.
+          Créez une demande claire et recevez des dossiers complets, structurés
+          et traçables.
         </p>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -140,9 +141,26 @@ export default function ServicePage() {
 
             <div className="mt-4 rounded-xl border border-slate-200 bg-white p-3">
               <p className="mb-1 text-xs text-slate-500">Lien à envoyer :</p>
-              <p className="break-all font-mono text-sm">
-                http://localhost:3000/demande/{requestId}
-              </p>
+
+              <div className="flex items-center gap-2">
+                <input
+                  readOnly
+                  value={`https://formpass.vercel.app/demande/${requestId}`}
+                  className="w-full rounded-lg border px-3 py-2 text-sm"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      `https://formpass.vercel.app/demande/${requestId}`
+                    )
+                  }
+                  className="rounded-lg bg-slate-900 px-3 py-2 text-sm text-white"
+                >
+                  Copier
+                </button>
+              </div>
             </div>
           </div>
         )}
