@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function CitoyenPage() {
   const [sent, setSent] = useState(false);
+  const [fileCount, setFileCount] = useState(0);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -104,13 +105,24 @@ export default function CitoyenPage() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Ajouter un document
+              Ajouter des documents
             </label>
             <input
               type="file"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                setFileCount(files ? files.length : 0);
+              }}
               className="w-full rounded-xl border border-slate-300 px-4 py-3"
             />
           </div>
+
+          {fileCount > 0 && (
+            <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
+              {fileCount} fichier(s) sélectionné(s)
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-4">
             <button
@@ -133,7 +145,11 @@ export default function CitoyenPage() {
           <div className="mt-6 rounded-2xl border border-green-200 bg-green-50 p-5 text-green-800 shadow-sm">
             <h2 className="text-lg font-semibold">Dossier transmis</h2>
             <p className="mt-2 text-sm">
-              Votre envoi a bien été simulé avec succès.
+              Votre dossier a été transmis avec succès.
+            </p>
+            <p className="mt-1 text-sm">
+              Nombre de fichiers joints :{" "}
+              <span className="font-semibold">{fileCount}</span>
             </p>
             <p className="mt-1 text-sm">
               Référence : <span className="font-semibold">FP-2026-0001</span>
