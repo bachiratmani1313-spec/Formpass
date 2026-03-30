@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 
 export default function DemandePage() {
   const [sent, setSent] = useState(false);
+  const [fileCount, setFileCount] = useState(0);
+
   const params = useParams();
   const id =
     typeof params.id === "string"
@@ -55,8 +57,19 @@ export default function DemandePage() {
 
             <input
               type="file"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                setFileCount(files ? files.length : 0);
+              }}
               className="w-full rounded-xl border border-slate-300 px-4 py-3"
             />
+
+            {fileCount > 0 && (
+              <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
+                {fileCount} fichier(s) sélectionné(s)
+              </div>
+            )}
 
             <button
               type="submit"
@@ -72,6 +85,10 @@ export default function DemandePage() {
             <h2 className="font-semibold">Dossier envoyé</h2>
             <p className="mt-2 text-sm">
               Votre réponse a bien été transmise.
+            </p>
+            <p className="mt-1 text-sm">
+              Nombre de fichiers joints :{" "}
+              <span className="font-semibold">{fileCount}</span>
             </p>
           </div>
         )}
