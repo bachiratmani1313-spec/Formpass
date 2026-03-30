@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
@@ -17,25 +19,21 @@ export default function Home() {
         </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href = "/citoyen";
-            }}
-            className="w-full rounded-2xl bg-blue-600 px-6 py-4 font-semibold text-white sm:w-auto"
+          
+          <Link
+            href="/citoyen"
+            className="w-full rounded-2xl bg-blue-600 px-6 py-4 font-semibold text-white sm:w-auto inline-flex justify-center items-center"
           >
             Espace citoyen
-          </button>
+          </Link>
 
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href = "/service";
-            }}
-            className="w-full rounded-2xl border border-white/20 px-6 py-4 font-semibold text-white sm:w-auto"
+          <Link
+            href="/service"
+            className="w-full rounded-2xl border border-white/20 px-6 py-4 font-semibold text-white sm:w-auto inline-flex justify-center items-center"
           >
             Espace service
-          </button>
+          </Link>
+
         </div>
       </div>
     </main>
