@@ -2,9 +2,12 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_30%)]" />
+        
+        {/* IMPORTANT : pointer-events-none pour ne pas bloquer les clics */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_30%)]" />
 
         <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10">
+          
           <header className="mb-16 flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
@@ -21,6 +24,7 @@ export default function Home() {
           </header>
 
           <div className="grid flex-1 items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+            
             <div>
               <div className="mb-6 inline-flex rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
                 Citoyens · Communes · Entreprises
@@ -37,6 +41,7 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
+                
                 <a
                   href="/citoyen"
                   className="rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
@@ -50,6 +55,7 @@ export default function Home() {
                 >
                   Espace service
                 </a>
+
               </div>
 
               <div className="mt-12 grid gap-4 sm:grid-cols-3">
@@ -78,28 +84,19 @@ export default function Home() {
 
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md">
               <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
-                      Aperçu
-                    </p>
-                    <h2 className="mt-2 text-2xl font-bold text-white">
-                      Parcours FormPass
-                    </h2>
-                  </div>
+                
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
+                  Aperçu
+                </p>
 
-                  <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                    Actif
-                  </div>
-                </div>
+                <h2 className="mt-2 text-2xl font-bold text-white">
+                  Parcours FormPass
+                </h2>
 
                 <div className="mt-8 space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <p className="text-sm font-semibold text-white">
                       1. Création de demande
-                    </p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Le service crée une demande et obtient un lien unique.
                     </p>
                   </div>
 
@@ -107,29 +104,18 @@ export default function Home() {
                     <p className="text-sm font-semibold text-white">
                       2. Réponse au lien
                     </p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Le citoyen ou partenaire transmet ses documents.
-                    </p>
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <p className="text-sm font-semibold text-white">
                       3. Suivi du statut
                     </p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Le dossier passe de envoyé à reçu puis validé.
-                    </p>
                   </div>
                 </div>
 
-                <div className="mt-8 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-4">
-                  <p className="text-sm font-medium text-blue-200">
-                    Idéal pour communes, entreprises, RH, fournisseurs et
-                    candidatures.
-                  </p>
-                </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
