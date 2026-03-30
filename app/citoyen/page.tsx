@@ -1,142 +1,219 @@
 "use client";
 
-import Link from "next/link";
+import { useRef, useState } from "react";
 
-export default function Home() {
+export default function CitoyenPage() {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setSelectedFiles((prev) => {
+      const merged = [...prev];
+
+      for (const file of files) {
+        const exists = merged.some(
+          (f) =>
+            f.name === file.name &&
+            f.size === file.size &&
+            f.lastModified === file.lastModified
+        );
+
+        if (!exists) {
+          merged.push(file);
+        }
+      }
+
+      return merged;
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  function removeFile(index: number) {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const fakeId = `FP-${Date.now()}`;
+    const link = `${window.location.origin}/demande/${fakeId}`;
+
+    setGeneratedLink(link);
+    setSubmitted(true);
+  }
+
+  async function copyLink() {
+    if (!generatedLink) return;
+    await navigator.clipboard.writeText(generatedLink);
+    alert("Lien copié");
+  }
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_30%)]" />
+    <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-900">
+      <div className="mx-auto max-w-4xl">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
+          FormPass
+        </p>
 
-        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10">
-          <header className="mb-16 flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
-                FormPass
-              </p>
-              <p className="mt-2 text-sm text-slate-400">
-                Transmission simple de dossiers
+        <h1 className="text-3xl font-bold">Espace citoyen</h1>
+
+        <p className="mt-2 max-w-2xl text-slate-600">
+          Complétez la demande, ajoutez les documents nécessaires et générez un
+          lien à transmettre au destinataire.
+        </p>
+
+        <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold">
+            Créer une demande de transmission
+          </h2>
+
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <input
+                type="text"
+                placeholder="Nom"
+                className="w-full rounded-xl border px-4 py-3"
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Prénom"
+                className="w-full rounded-xl border px-4 py-3"
+                required
+              />
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <input
+                type="tel"
+                placeholder="Numéro de téléphone"
+                className="w-full rounded-xl border px-4 py-3"
+                required
+              />
+
+              <input
+                type="email"
+                placeholder="Adresse email"
+                className="w-full rounded-xl border px-4 py-3"
+                required
+              />
+            </div>
+
+            <select
+              className="w-full rounded-xl border px-4 py-3"
+              required
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Choisir un type de documents
+              </option>
+              <option>Documents administratifs</option>
+              <option>Documents personnels</option>
+              <option>Curriculum vitae</option>
+              <option>Pièces d’identité</option>
+              <option>Justificatifs de domicile</option>
+              <option>Permis de conduire</option>
+              <option>Autres documents</option>
+            </select>
+
+            <textarea
+              placeholder="Expliquez brièvement votre demande ou le contenu attendu"
+              className="min-h-[140px] w-full rounded-xl border px-4 py-3"
+            />
+
+            <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
+              <label className="block text-sm font-medium text-slate-700">
+                Ajouter un ou plusieurs documents
+              </label>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                className="mt-3 w-full rounded-xl border bg-white px-4 py-3"
+              />
+
+              <p className="mt-2 text-sm text-slate-500">
+                Vous pouvez ajouter plusieurs fichiers PDF, images ou documents.
               </p>
             </div>
 
-            <div className="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 md:block">
-              Version démo
-            </div>
-          </header>
+            {selectedFiles.length > 0 && (
+              <div className="rounded-xl bg-blue-50 p-4">
+                <p className="mb-3 font-medium text-blue-900">
+                  Documents sélectionnés
+                </p>
 
-          <div className="grid flex-1 items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <div className="mb-6 inline-flex rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
-                Citoyens · Communes · Entreprises
+                <div className="space-y-2">
+                  {selectedFiles.map((file, index) => (
+                    <div
+                      key={`${file.name}-${file.lastModified}-${index}`}
+                      className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm"
+                    >
+                      <span className="truncate pr-4">{file.name}</span>
+
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="rounded-lg px-2 py-1 text-red-600 hover:bg-red-50"
+                      >
+                        Retirer
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
+            )}
 
-              <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-6xl">
-                Envoyez, recevez et suivez un dossier en quelques clics
-              </h1>
+            <button
+              type="submit"
+              className="rounded-xl bg-blue-700 px-6 py-3 font-semibold text-white transition hover:bg-blue-800"
+            >
+              Générer le lien
+            </button>
+          </form>
+        </div>
 
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                FormPass permet de créer une demande, générer un lien sécurisé,
-                transmettre plusieurs documents et suivre le statut du dossier
-                de manière simple, claire et professionnelle.
+        {submitted && (
+          <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-6">
+            <h3 className="text-lg font-semibold text-green-900">
+              Demande créée avec succès
+            </h3>
+
+            <p className="mt-2 text-green-800">
+              Votre lien de transmission a été généré. Vous pouvez le copier et
+              l’envoyer au destinataire.
+            </p>
+
+            <div className="mt-4 rounded-xl border bg-white p-4">
+              <p className="text-sm font-medium text-slate-700">Lien généré</p>
+              <p className="mt-2 break-all text-sm text-blue-700">
+                {generatedLink}
               </p>
-
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/citoyen"
-                  className="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
-                >
-                  Espace citoyen
-                </Link>
-
-                <Link
-                  href="/service"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
-                >
-                  Espace service
-                </Link>
-              </div>
-
-              <div className="mt-12 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <p className="text-2xl font-bold text-white">1 lien</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Une seule demande à partager
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <p className="text-2xl font-bold text-white">Multi-fichiers</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Ajout progressif de documents
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <p className="text-2xl font-bold text-white">3 statuts</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Envoyé, reçu, validé
-                  </p>
-                </div>
-              </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md">
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
-                      Aperçu
-                    </p>
-                    <h2 className="mt-2 text-2xl font-bold text-white">
-                      Parcours FormPass
-                    </h2>
-                  </div>
-
-                  <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                    Actif
-                  </div>
-                </div>
-
-                <div className="mt-8 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      1. Création de demande
-                    </p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Le service crée une demande et obtient un lien unique.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      2. Réponse au lien
-                    </p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Le citoyen ou partenaire transmet ses documents.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      3. Suivi du statut
-                    </p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Le dossier passe de envoyé à reçu puis validé.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-8 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-4">
-                  <p className="text-sm font-medium text-blue-200">
-                    Idéal pour communes, entreprises, RH, fournisseurs et
-                    candidatures.
-                  </p>
-                </div>
-              </div>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={copyLink}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              >
+                Copier le lien
+              </button>
             </div>
           </div>
-        </div>
-      </section>
+        )}
+      </div>
     </main>
   );
 }
