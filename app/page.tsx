@@ -1,13 +1,12 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="relative overflow-hidden">
-        
-        {/* IMPORTANT : pointer-events-none pour ne pas bloquer les clics */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_30%)]" />
 
         <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10">
-          
           <header className="mb-16 flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
@@ -24,7 +23,6 @@ export default function Home() {
           </header>
 
           <div className="grid flex-1 items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-            
             <div>
               <div className="mb-6 inline-flex rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
                 Citoyens · Communes · Entreprises
@@ -40,22 +38,20 @@ export default function Home() {
                 de manière simple, claire et professionnelle.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
-                
-                <a
+              <div className="relative z-10 mt-8 flex flex-wrap gap-4">
+                <Link
                   href="/citoyen"
-                  className="rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
+                  className="inline-flex rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
                 >
                   Espace citoyen
-                </a>
+                </Link>
 
-                <a
+                <Link
                   href="/service"
-                  className="rounded-2xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+                  className="inline-flex rounded-2xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
                 >
                   Espace service
-                </a>
-
+                </Link>
               </div>
 
               <div className="mt-12 grid gap-4 sm:grid-cols-3">
@@ -84,7 +80,6 @@ export default function Home() {
 
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md">
               <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-6">
-                
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
                   Aperçu
                 </p>
@@ -112,10 +107,8 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
         </div>
       </section>
