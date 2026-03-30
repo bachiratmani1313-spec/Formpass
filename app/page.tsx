@@ -1,4 +1,4 @@
-import Link from "next/link";
+"use client";
 
 export default function Home() {
   return (
@@ -23,7 +23,7 @@ export default function Home() {
           </header>
 
           <div className="grid flex-1 items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
+            <div className="relative z-50">
               <div className="mb-6 inline-flex rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
                 Citoyens · Communes · Entreprises
               </div>
@@ -38,20 +38,26 @@ export default function Home() {
                 de manière simple, claire et professionnelle.
               </p>
 
-              <div className="relative z-10 mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/citoyen"
-                  className="inline-flex rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
+              <div className="relative z-50 mt-8 flex flex-wrap gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = "/citoyen";
+                  }}
+                  className="rounded-2xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-500"
                 >
                   Espace citoyen
-                </Link>
+                </button>
 
-                <Link
-                  href="/service"
-                  className="inline-flex rounded-2xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = "/service";
+                  }}
+                  className="rounded-2xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
                 >
                   Espace service
-                </Link>
+                </button>
               </div>
 
               <div className="mt-12 grid gap-4 sm:grid-cols-3">
@@ -78,7 +84,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md">
+            <div className="pointer-events-none rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md">
               <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-6">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
                   Aperçu
