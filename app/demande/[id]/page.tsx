@@ -19,6 +19,12 @@ export default function DemandePage() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (selectedFiles.length === 0) {
+      alert("Veuillez sélectionner un ou plusieurs fichiers.");
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -126,7 +132,6 @@ export default function DemandePage() {
                 multiple
                 onChange={handleFileChange}
                 className="w-full rounded-xl border px-4 py-3"
-                required
               />
 
               {selectedFiles.length > 0 && (
@@ -176,7 +181,7 @@ export default function DemandePage() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-slate-900 border"
+                  className="rounded-xl border bg-white px-4 py-2 text-sm font-medium text-slate-900"
                 >
                   Envoyer un autre dossier
                 </button>
